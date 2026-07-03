@@ -1,8 +1,10 @@
 
+from email.mime import base
 from pathlib import Path
 import argparse
+from unicodedata import name
 
-from config.pipelines import VIDEO_PIPELINE
+from config.video_pipeline import VIDEO_PIPELINE
 
 VERSION = "0.0.1"
 
@@ -10,6 +12,38 @@ VERSION = "0.0.1"
 def show_version():
     print(f"🚀 Creative AI Studio v{VERSION}")
 
+def create_ai_files(base: Path):
+    ai = base / "14_AI"
+
+    (ai / "prompts.md").write_text(
+"""# Prompts
+
+## ChatGPT
+
+## Kling
+
+## Midjourney
+
+## Suno
+""",
+        encoding="utf-8",
+    )
+
+    (ai / "references.md").write_text(
+"""# References
+
+-
+""",
+        encoding="utf-8",
+    )
+
+    (ai / "notes.md").write_text(
+"""# Notes
+
+-
+""",
+        encoding="utf-8",
+    )
 
 def create_project(name: str):
     base = Path("workspace") / name
@@ -20,6 +54,8 @@ def create_project(name: str):
 
     for folder in folders:
         (base / folder).mkdir(exist_ok=True)
+
+    create_ai_files(base)
 
     print(f"✅ Project '{name}' created!")
     print(base.resolve())

@@ -1,0 +1,16 @@
+VIDEO_PIPELINE = [
+    "01_Brief",
+    "02_Research",
+    "03_Script",
+    "04_Broll",
+    "05_Storyboard",
+    "06_Shoot",
+    "07_Source",
+    "08_Premiere",
+    "09_AfterEffects",
+    "10_Music",
+    "11_Thumbnail",
+    "12_Export",
+    "13_Upload",
+    "14_AI",
+]
