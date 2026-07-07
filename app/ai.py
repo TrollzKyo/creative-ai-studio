@@ -15,9 +15,7 @@ def ask(system_prompt: str, prompt: str):
                 "content": (
                     system_prompt
                     + "\n\n"
-                    + "Bạn là trợ lý AI của Creative AI Studio. "
-                    + "Luôn trả lời bằng tiếng Việt, trừ khi người dùng yêu cầu ngôn ngữ khác. "
-                    + "Trả lời ngắn gọn, rõ ràng, thực tế."
+                    + "Luôn trả lời bằng tiếng Việt, trừ khi người dùng yêu cầu ngôn ngữ khác."
                 ),
             },
             {

@@ -3,6 +3,7 @@ import argparse
 from app.ai import ask
 from app.project import create_project, list_projects
 from app.router import get_model, get_system_prompt
+from app.script_agent import generate_script
 
 VERSION = "0.0.1"
 
@@ -29,6 +30,9 @@ def main():
     new_project = sub.add_parser("new-project")
     new_project.add_argument("name")
 
+    script = sub.add_parser("script")
+    script.add_argument("project")
+
     args = parser.parse_args()
 
     if args.command == "version":
@@ -50,12 +54,14 @@ def main():
 
     elif args.command == "ask":
         model = get_model(args.task)
-        system_prompt = get_system_prompt(args.task)
+        system = get_system_prompt(args.task)
 
         print(f"🤖 Using: {model}")
         print()
+        print(ask(system, args.prompt))
 
-        print(ask(system_prompt, args.prompt))
+    elif args.command == "script":
+        generate_script(args.project)
 
     elif args.command == "new-project":
         create_project(args.name)
