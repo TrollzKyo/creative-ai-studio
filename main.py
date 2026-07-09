@@ -5,7 +5,7 @@ from app.project import create_project, list_projects
 from app.router import get_model, get_system_prompt
 from app.script_agent import generate_script
 
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 
 def show_version():

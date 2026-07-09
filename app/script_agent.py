@@ -11,8 +11,7 @@ def generate_script(project: str):
     output_file = base / "03_Script" / "script.md"
 
     if not brief_file.exists():
-        print("❌ Không tìm thấy:")
-        print(brief_file)
+        print("❌ Brief not found.")
         return
 
     brief = brief_file.read_text(encoding="utf-8")
@@ -20,16 +19,16 @@ def generate_script(project: str):
     system = get_system_prompt("video")
 
     prompt = f"""
-Bạn hãy viết một kịch bản video chuyên nghiệp dựa trên brief sau.
+Dựa trên brief sau đây hãy viết một kịch bản video hoàn chỉnh.
 
 Yêu cầu:
 
-- Có tiêu đề
-- Mục tiêu video
-- Chia thành từng cảnh
-- Voice Over
-- Gợi ý B-roll
-- Thời lượng từng cảnh
+- Tiêu đề
+- Mục tiêu
+- Insight
+- Big Idea
+- Storyline
+- Bảng kịch bản
 
 Brief:
 
@@ -40,5 +39,6 @@ Brief:
 
     output_file.write_text(result, encoding="utf-8")
 
-    print("✅ Script generated!")
+    print()
+    print("✅ Script Generated")
     print(output_file.resolve())
