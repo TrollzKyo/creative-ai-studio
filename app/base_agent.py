@@ -2,32 +2,35 @@ import time
 from pathlib import Path
 
 from rich.console import Console
-from rich.status import Status
 
 from app.ai import ask
 from app.router import get_system_prompt
 from app.terminal import banner, info, step, done, finish
+from config.agents import AGENTS
 
 console = Console()
 
 
 def generate_file(
     project: str,
+    agent: str,
     input_path: str,
     output_path: str,
-    task: str,
     prompt_template: str,
     success_message: str,
 ):
     total_start = time.perf_counter()
 
-    banner("0.0.6")
-    info(project, task)
+    agent_config = AGENTS[agent]
+
+    banner("0.0.8")
+    info(project, agent_config["name"])
 
     base = Path("workspace") / project
 
     input_file = base / input_path
     output_file = base / output_path
+    context_file = base / "14_AI" / "context.md"
 
     if not input_file.exists():
         console.print(f"[red]❌ Không tìm thấy {input_file}[/red]")
@@ -38,10 +41,34 @@ def generate_file(
     content = input_file.read_text(encoding="utf-8")
     done(start)
 
+    # NEW
+    context = ""
+    if context_file.exists():
+        start = time.perf_counter()
+        step("Reading project context...")
+        context = context_file.read_text(encoding="utf-8")
+        done(start)
+
     start = time.perf_counter()
     step("Building prompt...")
-    system = get_system_prompt(task)
-    prompt = prompt_template.format(content=content)
+
+    prompt = f"""
+Đây là thông tin của dự án.
+
+====================
+PROJECT CONTEXT
+====================
+
+{context}
+
+====================
+PROJECT DATA
+====================
+
+{prompt_template.format(content=content)}
+"""
+
+    system = get_system_prompt(agent_config["task"])
     done(start)
 
     start = time.perf_counter()

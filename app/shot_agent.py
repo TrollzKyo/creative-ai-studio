@@ -1,24 +1,13 @@
-from pathlib import Path
-
-from app.ai import ask
-from app.router import get_system_prompt
+from app.base_agent import generate_file
 
 
 def generate_shotlist(project: str):
-    base = Path("workspace") / project
-
-    script_file = base / "03_Script" / "script.md"
-    output_file = base / "06_Shoot" / "shotlist.md"
-
-    if not script_file.exists():
-        print("❌ Script not found.")
-        return
-
-    script = script_file.read_text(encoding="utf-8")
-
-    system = get_system_prompt("video")
-
-    prompt = f"""
+    generate_file(
+        project=project,
+        agent="shot",
+        input_path="03_Script/script.md",
+        output_path="06_Shoot/shotlist.md",
+        prompt_template="""
 Đây là kịch bản video.
 
 Hãy lập Shot List chi tiết.
@@ -35,13 +24,7 @@ Mỗi shot gồm:
 
 Script:
 
-{script}
-"""
-
-    result = ask(system, prompt)
-
-    output_file.write_text(result, encoding="utf-8")
-
-    print()
-    print("✅ Shot List Generated")
-    print(output_file.resolve())
+{content}
+""",
+        success_message="✅ Shot List Generated",
+    )

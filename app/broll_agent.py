@@ -4,9 +4,9 @@ from app.base_agent import generate_file
 def generate_broll(project: str):
     generate_file(
         project=project,
+        agent="broll",
         input_path="03_Script/script.md",
         output_path="04_Broll/broll_checklist.md",
-        task="video",
         prompt_template="""
 Đây là kịch bản video.
 
