@@ -4,8 +4,10 @@ from app.ai import ask
 from app.project import create_project, list_projects
 from app.router import get_model, get_system_prompt
 from app.script_agent import generate_script
+from app.broll_agent import generate_broll
+from app.shot_agent import generate_shotlist
 
-VERSION = "0.0.2"
+VERSION = "0.0.4"
 
 
 def show_version():
@@ -32,6 +34,12 @@ def main():
 
     script = sub.add_parser("script")
     script.add_argument("project")
+
+    broll = sub.add_parser("broll")
+    broll.add_argument("project")
+
+    shot = sub.add_parser("shot")
+    shot.add_argument("project")
 
     args = parser.parse_args()
 
@@ -62,6 +70,12 @@ def main():
 
     elif args.command == "script":
         generate_script(args.project)
+
+    elif args.command == "broll":
+        generate_broll(args.project)
+
+    elif args.command == "shot":
+        generate_shotlist(args.project)
 
     elif args.command == "new-project":
         create_project(args.name)
