@@ -3,11 +3,13 @@ import argparse
 from app.ai import ask
 from app.project import create_project, list_projects
 from app.router import get_model, get_system_prompt
+
 from app.script_agent import generate_script
 from app.broll_agent import generate_broll
 from app.shot_agent import generate_shotlist
+from app.prepare import prepare
 
-VERSION = "0.0.4"
+VERSION = "0.0.7"
 
 
 def show_version():
@@ -40,6 +42,9 @@ def main():
 
     shot = sub.add_parser("shot")
     shot.add_argument("project")
+
+    prepare_cmd = sub.add_parser("prepare")
+    prepare_cmd.add_argument("project")
 
     args = parser.parse_args()
 
@@ -76,6 +81,9 @@ def main():
 
     elif args.command == "shot":
         generate_shotlist(args.project)
+
+    elif args.command == "prepare":
+        prepare(args.project)
 
     elif args.command == "new-project":
         create_project(args.name)
