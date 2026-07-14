@@ -7,9 +7,10 @@ from app.router import get_model, get_system_prompt
 from app.script_agent import generate_script
 from app.broll_agent import generate_broll
 from app.shot_agent import generate_shotlist
+from app.premiere_agent import generate_premiere
 from app.prepare import prepare
 
-VERSION = "0.0.7"
+VERSION = "0.0.9"
 
 
 def show_version():
@@ -42,6 +43,9 @@ def main():
 
     shot = sub.add_parser("shot")
     shot.add_argument("project")
+
+    premiere = sub.add_parser("premiere")
+    premiere.add_argument("project")
 
     prepare_cmd = sub.add_parser("prepare")
     prepare_cmd.add_argument("project")
@@ -81,6 +85,9 @@ def main():
 
     elif args.command == "shot":
         generate_shotlist(args.project)
+
+    elif args.command == "premiere":
+        generate_premiere(args.project)
 
     elif args.command == "prepare":
         prepare(args.project)

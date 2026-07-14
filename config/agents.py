@@ -11,4 +11,8 @@ AGENTS = {
         "name": "📸 Shot Planner",
         "task": "video",
     },
+    "premiere": {
+        "name": "🎞 Premiere Assistant",
+        "task": "video",
+    },
 }
