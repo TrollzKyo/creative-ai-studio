@@ -4,8 +4,10 @@ from pathlib import Path
 from rich.console import Console
 
 from app.ai import ask
+from app.prompt_builder import build_prompt
 from app.router import get_system_prompt
 from app.terminal import banner, info, step, done, finish
+from app.logger import log
 from config.agents import AGENTS
 
 console = Console()
@@ -23,24 +25,19 @@ def generate_file(
 
     agent_config = AGENTS[agent]
 
-    banner("0.1.1")
+    banner("0.1.3")
     info(project, agent_config["name"])
+
+    log(f"START | {agent} | {project}")
 
     base = Path("workspace") / project
 
     input_file = base / input_path
     output_file = base / output_path
 
-    context_file = base / "14_AI" / "context.md"
-    knowledge_file = Path("knowledge") / "company.md"
-    prompt_path = Path("prompts") / f"{prompt_file}.md"
-
     if not input_file.exists():
         console.print(f"[red]❌ Không tìm thấy {input_file}[/red]")
-        return
-
-    if not prompt_path.exists():
-        console.print(f"[red]❌ Không tìm thấy {prompt_path}[/red]")
+        log(f"ERROR | Missing input: {input_file}")
         return
 
     # Read input
@@ -49,75 +46,51 @@ def generate_file(
     content = input_file.read_text(encoding="utf-8")
     done(start)
 
-    # Read company knowledge
-    knowledge = ""
-    if knowledge_file.exists():
-        start = time.perf_counter()
-        step("Reading company knowledge...")
-        knowledge = knowledge_file.read_text(encoding="utf-8")
-        done(start)
-
-    # Read project context
-    context = ""
-    if context_file.exists():
-        start = time.perf_counter()
-        step("Reading project context...")
-        context = context_file.read_text(encoding="utf-8")
-        done(start)
-
-    # Read prompt
-    start = time.perf_counter()
-    step("Loading prompt...")
-    prompt_template = prompt_path.read_text(encoding="utf-8")
-    done(start)
-
-    # Build prompt
+    # Build Prompt
     start = time.perf_counter()
     step("Building prompt...")
 
-    prompt = f"""
-========================
-COMPANY KNOWLEDGE
-========================
-
-{knowledge}
-
-========================
-PROJECT CONTEXT
-========================
-
-{context}
-
-========================
-TASK
-========================
-
-{prompt_template.format(content=content)}
-"""
+    prompt = build_prompt(
+        project=project,
+        prompt_file=prompt_file,
+        content=content,
+    )
 
     system = get_system_prompt(agent_config["task"])
     done(start)
 
-    # Ask AI
+    # GPT
     start = time.perf_counter()
 
-    with console.status(
-        "[bold cyan]🤖 GPT-5.5 is thinking...[/bold cyan]",
-        spinner="dots",
-    ):
-        result = ask(system, prompt)
+    try:
+        with console.status(
+            "[bold cyan]🤖 GPT-5.5 is thinking...[/bold cyan]",
+            spinner="dots",
+        ):
+            result = ask(system, prompt)
 
-    done(start)
+        done(start)
+
+    except Exception as e:
+        console.print(f"[red]❌ {e}[/red]")
+        log(f"ERROR | {agent} | {e}")
+        return
 
     # Save
     start = time.perf_counter()
     step("Saving output...")
+
     output_file.parent.mkdir(parents=True, exist_ok=True)
     output_file.write_text(result, encoding="utf-8")
+
     done(start)
 
     console.print()
     console.print(f"[bold green]{success_message}[/bold green]")
     console.print(output_file.resolve())
 
-    finish(time.perf_counter() - total_start)
+    elapsed = time.perf_counter() - total_start
+
+    log(f"SUCCESS | {agent} | {project} | {elapsed:.2f}s")
+
+    finish(elapsed)
