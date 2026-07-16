@@ -1,4 +1,8 @@
 AGENTS = {
+    "research": {
+        "name": "🔍 Research Agent",
+        "task": "video",
+    },
     "script": {
         "name": "📝 Script Writer",
         "task": "video",

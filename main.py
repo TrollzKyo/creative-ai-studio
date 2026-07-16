@@ -4,13 +4,14 @@ from app.ai import ask
 from app.project import create_project, list_projects
 from app.router import get_model, get_system_prompt
 
+from app.research_agent import generate_research
 from app.script_agent import generate_script
 from app.broll_agent import generate_broll
 from app.shot_agent import generate_shotlist
 from app.premiere_agent import generate_premiere
 from app.prepare import prepare
 
-VERSION = "0.0.9"
+VERSION = "0.1.2"
 
 
 def show_version():
@@ -34,6 +35,9 @@ def main():
 
     new_project = sub.add_parser("new-project")
     new_project.add_argument("name")
+
+    research = sub.add_parser("research")
+    research.add_argument("project")
 
     script = sub.add_parser("script")
     script.add_argument("project")
@@ -76,6 +80,9 @@ def main():
         print(f"🤖 Using: {model}")
         print()
         print(ask(system, args.prompt))
+
+    elif args.command == "research":
+        generate_research(args.project)
 
     elif args.command == "script":
         generate_script(args.project)
