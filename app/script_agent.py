@@ -7,21 +7,6 @@ def generate_script(project: str):
         agent="script",
         input_path="01_Brief/brief.md",
         output_path="03_Script/script.md",
-        prompt_template="""
-Dựa trên brief sau đây hãy viết một kịch bản video hoàn chỉnh.
-
-Yêu cầu:
-
-- Tiêu đề
-- Mục tiêu
-- Insight
-- Big Idea
-- Storyline
-- Bảng kịch bản
-
-Brief:
-
-{content}
-""",
+        prompt_file="script",
         success_message="✅ Script Generated",
     )
