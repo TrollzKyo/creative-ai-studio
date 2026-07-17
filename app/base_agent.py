@@ -25,7 +25,7 @@ def generate_file(
 
     agent_config = AGENTS[agent]
 
-    banner("0.1.3")
+    banner("0.1.7")
     info(project, agent_config["name"])
 
     log(f"START | {agent} | {project}")
@@ -34,6 +34,7 @@ def generate_file(
 
     input_file = base / input_path
     output_file = base / output_path
+    memory_file = base / "14_AI" / "memory.md"
 
     if not input_file.exists():
         console.print(f"[red]❌ Không tìm thấy {input_file}[/red]")
@@ -43,7 +44,9 @@ def generate_file(
     # Read input
     start = time.perf_counter()
     step("Reading input...")
+
     content = input_file.read_text(encoding="utf-8")
+
     done(start)
 
     # Build Prompt
@@ -56,7 +59,22 @@ def generate_file(
         content=content,
     )
 
+    # Inject Project Memory
+    if memory_file.exists():
+        memory = memory_file.read_text(encoding="utf-8")
+
+        prompt = f"""
+# PROJECT MEMORY
+
+{memory}
+
+---
+
+{prompt}
+"""
+
     system = get_system_prompt(agent_config["task"])
+
     done(start)
 
     # GPT

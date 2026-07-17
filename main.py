@@ -8,15 +8,16 @@ from app.research_agent import generate_research
 from app.script_agent import generate_script
 from app.broll_agent import generate_broll
 from app.shot_agent import generate_shotlist
-from app.premiere_agent import generate_premiere
 from app.assets_agent import generate_assets
+from app.premiere_agent import generate_premiere
 from app.subtitle_agent import generate_subtitle
+from app.memory_agent import generate_memory
 
 from app.prepare import prepare
 from app.status import show_status
 from app.project_runner import run_project
 
-VERSION = "0.1.6"
+VERSION = "0.1.7"
 
 
 def show_version():
@@ -61,6 +62,9 @@ def main():
 
     subtitle = sub.add_parser("subtitle")
     subtitle.add_argument("project")
+
+    memory = sub.add_parser("memory")
+    memory.add_argument("project")
 
     status = sub.add_parser("status")
     status.add_argument("project")
@@ -120,6 +124,9 @@ def main():
 
     elif args.command == "subtitle":
         generate_subtitle(args.project)
+
+    elif args.command == "memory":
+        generate_memory(args.project)
 
     elif args.command == "status":
         show_status(args.project)
