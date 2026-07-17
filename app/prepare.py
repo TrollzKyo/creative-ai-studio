@@ -2,6 +2,7 @@ from app.research_agent import generate_research
 from app.script_agent import generate_script
 from app.broll_agent import generate_broll
 from app.shot_agent import generate_shotlist
+from app.assets_agent import generate_assets
 from app.premiere_agent import generate_premiere
 
 
@@ -30,7 +31,12 @@ def prepare(project: str):
 
     print()
 
-    print("⑤ Premiere Notes...")
+    print("⑤ Asset Planner...")
+    generate_assets(project)
+
+    print()
+
+    print("⑥ Premiere Notes...")
     generate_premiere(project)
 
     print()
