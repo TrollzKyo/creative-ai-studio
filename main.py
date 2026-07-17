@@ -11,8 +11,10 @@ from app.shot_agent import generate_shotlist
 from app.premiere_agent import generate_premiere
 from app.assets_agent import generate_assets
 from app.prepare import prepare
+from app.status import show_status
+from app.project_runner import run_project
 
-VERSION = "0.1.3"
+VERSION = "0.1.5"
 
 
 def show_version():
@@ -54,6 +56,12 @@ def main():
 
     assets = sub.add_parser("assets")
     assets.add_argument("project")
+
+    status = sub.add_parser("status")
+    status.add_argument("project")
+
+    run = sub.add_parser("run")
+    run.add_argument("project")
 
     prepare_cmd = sub.add_parser("prepare")
     prepare_cmd.add_argument("project")
@@ -104,6 +112,12 @@ def main():
 
     elif args.command == "assets":
         generate_assets(args.project)
+
+    elif args.command == "status":
+        show_status(args.project)
+
+    elif args.command == "run":
+        run_project(args.project)
 
     elif args.command == "prepare":
         prepare(args.project)
