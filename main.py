@@ -10,11 +10,13 @@ from app.broll_agent import generate_broll
 from app.shot_agent import generate_shotlist
 from app.premiere_agent import generate_premiere
 from app.assets_agent import generate_assets
+from app.subtitle_agent import generate_subtitle
+
 from app.prepare import prepare
 from app.status import show_status
 from app.project_runner import run_project
 
-VERSION = "0.1.5"
+VERSION = "0.1.6"
 
 
 def show_version():
@@ -51,11 +53,14 @@ def main():
     shot = sub.add_parser("shot")
     shot.add_argument("project")
 
+    assets = sub.add_parser("assets")
+    assets.add_argument("project")
+
     premiere = sub.add_parser("premiere")
     premiere.add_argument("project")
 
-    assets = sub.add_parser("assets")
-    assets.add_argument("project")
+    subtitle = sub.add_parser("subtitle")
+    subtitle.add_argument("project")
 
     status = sub.add_parser("status")
     status.add_argument("project")
@@ -107,11 +112,14 @@ def main():
     elif args.command == "shot":
         generate_shotlist(args.project)
 
+    elif args.command == "assets":
+        generate_assets(args.project)
+
     elif args.command == "premiere":
         generate_premiere(args.project)
 
-    elif args.command == "assets":
-        generate_assets(args.project)
+    elif args.command == "subtitle":
+        generate_subtitle(args.project)
 
     elif args.command == "status":
         show_status(args.project)
